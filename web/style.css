@@ -1,0 +1,116 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Pastikan container memiliki posisi relative agar teks ESC bisa mengikuti */
+.container {
+    position: relative; /* ✅ Agar teks ESC tetap mengikuti UI */
+    display: none;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+}
+
+/* Teks ESC lebih jauh di bawah UI */
+#esc-text {
+    position: absolute; /* ✅ Selalu mengikuti UI */
+    bottom: -50px; /* ✅ Turunkan sedikit lebih jauh */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Sembunyikan teks saat UI tertutup */
+.hidden {
+    display: none;
+}
+
+/* Batasi tinggi daftar pekerjaan agar bisa di-scroll */
+#job-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsif */
+    gap: 15px;
+    padding: 20px;
+    justify-content: center;
+    
+    max-height: 400px; /* ✅ Batasi tinggi maksimum */
+    overflow-y: auto; /* ✅ Aktifkan scrolling jika pekerjaan terlalu banyak */
+}
+
+/* Custom scrollbar agar lebih rapi */
+#job-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#job-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+#job-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+}
+
+#job-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* Card Style */
+.job-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.job-card:hover {
+    transform: scale(1.05);
+}
+
+/* Gambar Pekerjaan */
+.job-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* Tombol Pilih */
+.job-button {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.job-button:hover {
+    background: #ff6b81;
+}
