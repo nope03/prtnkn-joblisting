@@ -44,7 +44,7 @@ AddEventHandler('joblisting:applyJob', function(job)
             title = locale('tittle_notif'),
             description = locale('work_now') .. job,
             type = 'success',
-            position = 'top-right',
+            position = 'bottom',
             duration = 5000
         })
 
@@ -54,7 +54,7 @@ AddEventHandler('joblisting:applyJob', function(job)
             title = locale('tittle_notif'),
             description = locale('work_not_valid'),
             type = 'error',
-            position = 'top-right',
+            position = 'bottom',
             duration = 5000
         })
     end

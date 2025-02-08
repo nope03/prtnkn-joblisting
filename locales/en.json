@@ -2,5 +2,6 @@
     "tittle_notif": "Job Center",
     "work_now": "Your current job: ",
     "work_not_valid": "Invalid job!",
-    "text_ui": "[E] Open Job Center"
+    "text_ui": "[E] Open Job Center",
+    "blip_text_job": "Job Center"
   }

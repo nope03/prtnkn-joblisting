@@ -44,12 +44,20 @@ Config.Jobs = {
 }
 
 Config.DefaultImage = "https://static.wikia.nocookie.net/gtawiki/images/0/0d/Officer_Jernigan-GTAO-Chopper_Tail_Spawn.png/revision/latest/scale-to-width-down/1000?cb=20170414031254"
-
+Config.Blips = true
 Config.JobCenters = {
     {
         coords = vec3(-267.94, -957.93, 31.22),
         size = vec3(3.0, 3.0, 3.0),
         rotation = 0.0,
-        debug = false
+        debug = false,
+        blip = {    -- Added blip for the job center
+            sprite = 408,
+            display = 4,
+            scale = 1.0,
+            color = 38,
+            shortRange = true,
+            name = "Job Center"
+        }
     }
 }

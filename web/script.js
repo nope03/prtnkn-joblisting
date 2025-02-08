@@ -1,78 +1,71 @@
 let allJobs = []; // Menyimpan semua pekerjaan
 let globalCurrentJob = null; // Menyimpan pekerjaan saat ini secara global
 
-function displayJobs(jobs, currentJob) {
-    const jobList = document.getElementById("job-list");
-    jobList.innerHTML = ""; // Kosongkan daftar pekerjaan sebelum menampilkan yang baru
+// Simpan referensi elemen DOM agar lebih efisien
+const jobList = document.getElementById("job-list");
+const currentJobLabel = document.getElementById("current-job-label");
+const container = document.getElementById("job-container");
+const escText = document.getElementById("esc-text");
+const searchInput = document.getElementById("search-input");
 
-    // Tampilkan pekerjaan saat ini pemain
-    const currentJobLabel = document.getElementById("current-job-label");
-    if (currentJob && currentJob.label) {
-        currentJobLabel.textContent = currentJob.label;
-    } else {
-        currentJobLabel.textContent = "Unemployed";
+// Fungsi untuk menampilkan daftar pekerjaan
+function displayJobs(jobs, currentJob) {
+    jobList.innerHTML = ""; // Kosongkan daftar pekerjaan sebelum menampilkan yang baru
+    currentJobLabel.textContent = currentJob?.label || "Unemployed";
+
+    if (!jobs.length) {
+        jobList.innerHTML = `<p style="text-align:center; color:gray;">No jobs available.</p>`;
+        return;
     }
 
     jobs.sort((a, b) => a.label.localeCompare(b.label));
 
+    const fragment = document.createDocumentFragment();
+
     jobs.forEach((job) => {
-        if (!job || typeof job.name !== "string" || typeof job.label !== "string" || typeof job.image !== "string") {
-            console.error("[SECURITY] Data pekerjaan tidak valid!", job);
+        if (!job?.name || !job?.label || !job?.image) {
             return;
         }
 
         const card = document.createElement("div");
-        card.classList.add("job-card");
+        card.className = "job-card";
+        card.innerHTML = `
+            <img src="${job.image}" alt="${job.label}" class="job-image">
+            <h3>${job.label}</h3>
+            <p class="job-description">${job.description || "No description available."}</p>
+            <button class="job-button">APPLY JOB</button>
+        `;
 
-        const img = document.createElement("img");
-        img.src = job.image;
-        img.alt = job.label;
-        img.classList.add("job-image");
-
-        const jobName = document.createElement("h3");
-        jobName.textContent = job.label;
-
-        const jobDescription = document.createElement("p");
-        jobDescription.textContent = job.description || "No description available.";
-        jobDescription.classList.add("job-description");
-
-        const button = document.createElement("button");
-        button.textContent = "APPLY JOB";
-        button.classList.add("job-button");
-        button.addEventListener("click", () => {
-            fetch(`https://${GetParentResourceName()}/selectJob`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ jobName: job.name }),
-            }).then(() => closeUI());
-        });
-
-        card.appendChild(img);
-        card.appendChild(jobName);
-        card.appendChild(jobDescription);
-        card.appendChild(button);
-
-        jobList.appendChild(card);
+        card.querySelector(".job-button").addEventListener("click", () => applyJob(job.name));
+        fragment.appendChild(card);
     });
+
+    jobList.appendChild(fragment);
 }
 
+// Fungsi untuk mengirim permintaan pemilihan pekerjaan
+function applyJob(jobName) {
+    fetch(`https://${GetParentResourceName()}/selectJob`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobName }),
+    }).then(() => closeUI()).catch(console.error);
+}
+
+// Fungsi untuk menyaring pekerjaan berdasarkan kata kunci
 function filterJobs(keyword) {
-    const filteredJobs = allJobs.filter((job) =>
-        job.label.toLowerCase().includes(keyword.toLowerCase())
+    displayJobs(
+        allJobs.filter((job) => job.label.toLowerCase().includes(keyword.toLowerCase())),
+        globalCurrentJob
     );
-    displayJobs(filteredJobs, globalCurrentJob); // Gunakan currentJob dari variabel global
 }
 
 // Fungsi untuk membuka UI
 function openUI() {
-    console.log("[DEBUG] Membuka UI dari NUI");
-    const container = document.getElementById("job-container");
     container.style.display = "block";
-    container.classList.remove("fade-out"); // Hapus kelas animasi menutup
-    container.classList.add("fade-in"); // Tambahkan kelas animasi membuka
-    document.getElementById("esc-text").classList.remove("hidden"); // Tampilkan ESC
-
-    // Tambahkan class 'ui-active' ke body
+    container.classList.remove("fade-out");
+    container.classList.add("fade-in");
+    escText.classList.remove("hidden");
     document.body.classList.add("ui-active");
 
     document.addEventListener("keydown", escListener);
@@ -80,54 +73,44 @@ function openUI() {
 
 // Fungsi untuk menutup UI
 function closeUI() {
-    console.log("[DEBUG] Menutup UI dari NUI");
-    const container = document.getElementById("job-container");
-    container.classList.remove("fade-in"); // Hapus kelas animasi membuka
-    container.classList.add("fade-out"); // Tambahkan kelas animasi menutup
-
-    // Hapus class 'ui-active' dari body
+    container.classList.remove("fade-in");
+    container.classList.add("fade-out");
     document.body.classList.remove("ui-active");
 
-    // Tunggu hingga animasi selesai sebelum menyembunyikan container
     setTimeout(() => {
         container.style.display = "none";
-    }, 300); // Sesuaikan waktu dengan durasi animasi
+        escText.classList.add("hidden");
+    }, 300);
 
-    document.getElementById("esc-text").classList.add("hidden"); // Sembunyikan ESC
     document.removeEventListener("keydown", escListener);
 
     fetch(`https://${GetParentResourceName()}/closeUI`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-    });
+    }).catch(console.error);
 }
 
-// Fungsi untuk menangani tombol ESC
+// Event listener untuk tombol ESC
 function escListener(event) {
     if (event.key === "Escape") {
-        console.log("[DEBUG] ESC ditekan, menutup UI");
         closeUI();
     }
 }
 
 // Pastikan teks ESC tidak muncul saat awal
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("esc-text").classList.add("hidden");
-});
+document.addEventListener("DOMContentLoaded", () => escText.classList.add("hidden"));
 
-window.addEventListener("message", function (event) {
+// Event listener untuk menerima pesan dari NUI
+window.addEventListener("message", (event) => {
     if (event.data.type === "displayJobs") {
-        allJobs = event.data.jobs; // Simpan semua pekerjaan
-        globalCurrentJob = event.data.currentJob; // Simpan pekerjaan saat ini ke variabel global
+        allJobs = event.data.jobs || [];
+        globalCurrentJob = event.data.currentJob || null;
         openUI();
-        displayJobs(allJobs, globalCurrentJob); // Pastikan currentJob tidak berubah saat UI dibuka
+        displayJobs(allJobs, globalCurrentJob);
     } else if (event.data.type === "hideUI") {
         closeUI();
     }
 });
 
 // Event listener untuk input pencarian
-document.getElementById("search-input").addEventListener("input", function (e) {
-    const keyword = e.target.value;
-    filterJobs(keyword); // Filter pekerjaan berdasarkan kata kunci
-});
+searchInput.addEventListener("input", (e) => filterJobs(e.target.value));

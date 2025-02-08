@@ -1,37 +1,18 @@
-/* Animasi untuk membuka UI */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+:root {
+    --main-color: orange;
+    --text-glow: 0px 0px 8px rgba(255, 153, 0, 0.8), 0px 0px 12px rgba(255, 179, 0, 0.5);
+    --bg-opacity: rgba(255, 255, 255, 0.1);
+    --text-opacity: rgba(255, 255, 255, 0.7);
 }
 
-/* Animasi untuk menutup UI */
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-}
+/* Animasi untuk membuka dan menutup UI */
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 
-/* Kelas untuk animasi membuka UI */
-.container.fade-in {
-    animation: fadeIn 0.3s ease-in-out forwards;
-}
+.container.fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
+.container.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
 
-/* Kelas untuk animasi menutup UI */
-.container.fade-out {
-    animation: fadeOut 0.3s ease-in-out forwards;
-}
-
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -41,33 +22,27 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
-    background-color: linear; /* Latar belakang transparan secara default */
-    transition: background-color 0.3s ease-in-out; /* Animasi perubahan warna */
+    transition: background-color 0.3s ease-in-out;
 }
 
-body.ui-active {
-    background: linear-gradient(rgba(255, 166, 0, 0), rgba(255, 166, 0, 0.5)); /* Warna latar belakang saat UI aktif */
-}
+body.ui-active { background: linear-gradient(rgba(255, 166, 0, 0), rgba(255, 166, 0, 0.5)); }
 
 h1 {
     margin-bottom: -5px;
-    color: orange;
-    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
-                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
+    color: var(--main-color);
+    text-shadow: var(--text-glow);
 }
 
-/* Styling untuk sub-judul */
 .sub-title {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 5px; /* ✅ Kurangi jarak dari judul */
-    margin-bottom: 10px; /* ✅ Kurangi jarak ke daftar pekerjaan */
+    color: var(--text-opacity);
+    margin: 5px 0 10px;
     text-align: center;
-    line-height: 1.2; /* ✅ Pastikan keterbacaan tetap baik */
-    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
-                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
+    line-height: 1.2;
+    text-shadow: var(--text-glow);
 }
 
+/* UI Container */
 .container {
     position: relative;
     display: none;
@@ -77,120 +52,106 @@ h1 {
     text-align: center;
     width: 80%;
     max-width: 800px;
-    opacity: 0; /* Mulai dengan opacity 0 */
-    transform: scale(0.9); /* Mulai dengan skala lebih kecil */
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Tambahkan transition */
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-/* Styling untuk container Exit, Escape, dan Search */
+/* Exit, Escape & Search */
 #esc-text {
     position: absolute;
-    top: 20px; /* Posisi dari atas */
-    right: 20px; /* Posisi dari kanan */
+    top: 20px;
+    right: 20px;
     font-size: 14px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* Susun elemen secara vertikal */
-    align-items: flex-end; /* Rata kanan */
-    gap: 10px; /* Jarak antara elemen */
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
 }
 
-/* Container untuk Exit dan Escape */
 .exit-escape-container {
     display: flex;
     align-items: center;
 }
 
-/* Styling untuk input pencarian */
 #search-input {
-    font-family: Arial, FontAwesome; /* Gunakan FontAwesome untuk ikon */
-    width: 200px; /* Lebar input pencarian */
-    padding: 5px;
-    padding-left: 18px;
+    font-family: Arial, FontAwesome;
+    width: 200px;
+    padding: 5px 18px;
     border: none;
     border-radius: 50px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-opacity);
     color: white;
     font-size: 12px;
     outline: none;
 }
 
 #search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-    padding: 5px;
+    color: var(--text-opacity);
 }
 
 #search-input:focus {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Kata "Exit" hanya memiliki border */
+/* Exit & Escape Buttons */
+#esc-text .exit, #esc-text .escape {
+    padding: 5px 10px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.3);
+}
+
 #esc-text .exit {
     border: 2px solid rgba(255, 255, 255, 0.1);
-    padding: 5px 10px;
-    border-radius: 5px 0px 0px 5px;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.3);
-    background: none;
+    border-radius: 5px 0 0 5px;
 }
 
-/* Kata "Escape" memiliki background */
 #esc-text .escape {
-    border: 2px rgba(255, 255, 255, 0.3);
     background: rgba(255, 255, 255, 0.3);
-    padding: 5px 10px;
-    border-radius: 0px 5px 5px 0px;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.3);
+    border-radius: 0 5px 5px 0;
 }
 
-/* Sembunyikan teks saat UI tertutup */
-.hidden {
-    display: none;
-}
-
-/* Batasi tinggi daftar pekerjaan agar bisa di-scroll */
+/* Job List */
 #job-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsif */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     padding: 20px;
     justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--bg-opacity);
     border-radius: 10px;
-    max-height: 400px; /* ✅ Batasi tinggi maksimum */
-    overflow-y: auto; /* ✅ Aktifkan scrolling jika pekerjaan terlalu banyak */
-    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
-                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
+    max-height: 400px;
+    overflow-y: auto;
+    text-shadow: var(--text-glow);
 }
 
-/* Custom scrollbar agar lebih rapi */
+/* Custom Scrollbar */
 #job-list::-webkit-scrollbar {
     width: 4px;
 }
 
 #job-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-opacity);
     border-radius: 10px;
 }
 
 #job-list::-webkit-scrollbar-thumb {
-    background: orange;
-    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
-                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
+    background: var(--main-color);
+    text-shadow: var(--text-glow);
 }
 
 #job-list::-webkit-scrollbar-thumb:hover {
     background: rgb(182, 118, 0);
 }
 
-/* Card Style */
+/* Job Cards */
 .job-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-opacity);
     border-radius: 10px;
     padding: 1px;
     text-align: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.711);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
     transition: transform 0.2s ease-in-out;
 }
 
@@ -198,26 +159,20 @@ h1 {
     transform: scale(1.05);
 }
 
-/* Gambar Pekerjaan */
 .job-image {
     width: 100%;
-    height: auto;
-    border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 10px 0 0;
     margin-bottom: 10px;
 }
 
-/* Tombol Pilih */
+/* Job Buttons */
 .job-button {
     background: rgba(0, 0, 0, 0.9);
-    color: orange;
-    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
-                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
+    color: var(--main-color);
+    text-shadow: var(--text-glow);
     padding: 10px;
-    border-radius: 0px 0px 5px 5px;
-    border-bottom-color: white;
-    border-left: none;
-    border-top: none;
-    border-right: none;
+    border-radius: 0 0 5px 5px;
+    border: none;
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
@@ -231,39 +186,34 @@ h1 {
 
 .job-description {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-opacity);
     margin: 10px 0;
     text-align: center;
     line-height: 1.4;
 }
 
+/* Current Job */
 #current-job-container {
     display: flex;
-    align-items: center; /* Agar sejajar dengan judul */
-    gap: 10px; /* Beri jarak antara kotak radio dan teks */
-    margin-bottom: 10px; /* Tambahkan margin agar lebih rapi */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .radio-box {
     width: 10px;
     height: 10px;
-    background-color: orange; /* Warna orange */
+    background-color: var(--main-color);
     display: inline-block;
-    box-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
-                 0px 0px 12px rgba(255, 179, 0, 0.5);
+    box-shadow: var(--text-glow);
 }
 
-.current-job-title {
+.current-job-title, #current-job-label {
     font-weight: bold;
     font-size: 12px;
-    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
-                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
+    text-shadow: var(--text-glow);
 }
 
 #current-job-label {
-    font-weight: bold;
-    color: orange;
-    font-size: 12px;
-    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
-                 0px 0px 12px rgba(255, 179, 0, 0.5);
+    color: var(--main-color);
 }

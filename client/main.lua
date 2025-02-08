@@ -50,9 +50,7 @@ RegisterNUICallback('selectJob', function(data, cb)
     cb('ok')
 end)
 
-RegisterNetEvent('joblisting:forceCloseUI', function()
-    closeUI()
-end)
+RegisterNetEvent('joblisting:forceCloseUI', closeUI())
 
 for _, zone in pairs(Config.JobCenters) do
     lib.zones.box({
@@ -71,7 +69,29 @@ for _, zone in pairs(Config.JobCenters) do
         inside = function()
             if IsControlJustReleased(0, 38) and isInZone then
                 openJobCenter()
+                lib.hideTextUI()
             end
         end
     })
+end
+
+if Config.Blips then
+    local function addJobCenterBlips()
+        for _, zone in ipairs(Config.JobCenters) do
+            local blip = AddBlipForCoord(zone.coords.x, zone.coords.y, zone.coords.z)
+    
+            SetBlipSprite(blip, 351) -- Ikon briefcase (351)
+            SetBlipDisplay(blip, 4)
+            SetBlipScale(blip, 1.0) -- Ukuran blip
+            SetBlipColour(blip, 3) -- Warna biru
+            SetBlipAsShortRange(blip, true)
+    
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString(locale('blip_text_job'))
+            EndTextCommandSetBlipName(blip)
+        end
+    end
+    
+    -- Panggil fungsi saat resource dimulai
+    CreateThread(addJobCenterBlips)
 end
