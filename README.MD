@@ -1,15 +1,3 @@
-Berikut adalah **README.md** untuk script **Job Listing** menggunakan **ox_lib** dan **ESX** di FiveM.  
-
-📌 **Fitur Utama:**  
-- Menggunakan **ox_lib** (`lib.locale`, `lib.callback`, `lib.array`, `lib.notify`, `lib.zones`).  
-- Mendukung **multi-bahasa** (`locales/en.json`, `locales/id.json`).  
-- **Sorting & filtering** otomatis (job non-whitelisted saja).  
-- **Interaksi zona** menggunakan `lib.zones`.  
-- **Animasi & prop tablet** saat membuka UI.  
-
----
-
-## **📄 README.md**
 ```md
 # Job Listing for FiveM (ESX + ox_lib)
 
