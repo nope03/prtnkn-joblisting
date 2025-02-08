@@ -1,7 +1,9 @@
+let allJobs = []; // Variabel global untuk menyimpan semua pekerjaan
+
 // Fungsi untuk menampilkan daftar pekerjaan sebagai card
 function displayJobs(jobs) {
     const jobList = document.getElementById("job-list");
-    jobList.innerHTML = "";
+    jobList.innerHTML = ""; // Kosongkan daftar pekerjaan sebelum menampilkan yang baru
 
     jobs.sort((a, b) => a.label.localeCompare(b.label));
 
@@ -23,7 +25,7 @@ function displayJobs(jobs) {
         jobName.textContent = job.label;
 
         const button = document.createElement("button");
-        button.textContent = "Pilih Pekerjaan";
+        button.textContent = "APPLY JOB";
         button.classList.add("job-button");
         button.addEventListener("click", () => {
             fetch(`https://${GetParentResourceName()}/selectJob`, {
@@ -41,11 +43,25 @@ function displayJobs(jobs) {
     });
 }
 
+// Fungsi untuk memfilter pekerjaan berdasarkan kata kunci
+function filterJobs(keyword) {
+    const filteredJobs = allJobs.filter((job) =>
+        job.label.toLowerCase().includes(keyword.toLowerCase())
+    );
+    displayJobs(filteredJobs); // Tampilkan hasil filter
+}
+
 // Fungsi untuk membuka UI
 function openUI() {
     console.log("[DEBUG] Membuka UI dari NUI");
-    document.getElementById("job-container").style.display = "block";
-    document.getElementById("esc-text").classList.remove("hidden"); // ✅ Tampilkan ESC
+    const container = document.getElementById("job-container");
+    container.style.display = "block";
+    container.classList.remove("fade-out"); // Hapus kelas animasi menutup
+    container.classList.add("fade-in"); // Tambahkan kelas animasi membuka
+    document.getElementById("esc-text").classList.remove("hidden"); // Tampilkan ESC
+
+    // Tambahkan class 'ui-active' ke body
+    document.body.classList.add("ui-active");
 
     document.addEventListener("keydown", escListener);
 }
@@ -53,9 +69,19 @@ function openUI() {
 // Fungsi untuk menutup UI
 function closeUI() {
     console.log("[DEBUG] Menutup UI dari NUI");
-    document.getElementById("job-container").style.display = "none";
-    document.getElementById("esc-text").classList.add("hidden"); // ✅ Sembunyikan ESC
+    const container = document.getElementById("job-container");
+    container.classList.remove("fade-in"); // Hapus kelas animasi membuka
+    container.classList.add("fade-out"); // Tambahkan kelas animasi menutup
 
+    // Hapus class 'ui-active' dari body
+    document.body.classList.remove("ui-active");
+
+    // Tunggu hingga animasi selesai sebelum menyembunyikan container
+    setTimeout(() => {
+        container.style.display = "none";
+    }, 300); // Sesuaikan waktu dengan durasi animasi
+
+    document.getElementById("esc-text").classList.add("hidden"); // Sembunyikan ESC
     document.removeEventListener("keydown", escListener);
 
     fetch(`https://${GetParentResourceName()}/closeUI`, {
@@ -80,9 +106,16 @@ document.addEventListener("DOMContentLoaded", function () {
 // Menerima pesan dari Lua
 window.addEventListener("message", function (event) {
     if (event.data.type === "displayJobs") {
+        allJobs = event.data.jobs; // Simpan semua pekerjaan
         openUI();
-        displayJobs(event.data.jobs);
+        displayJobs(allJobs); // Tampilkan semua pekerjaan saat pertama kali dibuka
     } else if (event.data.type === "hideUI") {
         closeUI();
     }
+});
+
+// Event listener untuk input pencarian
+document.getElementById("search-input").addEventListener("input", function (e) {
+    const keyword = e.target.value;
+    filterJobs(keyword); // Filter pekerjaan berdasarkan kata kunci
 });

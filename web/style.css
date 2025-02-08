@@ -1,3 +1,37 @@
+/* Animasi untuk membuka UI */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animasi untuk menutup UI */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* Kelas untuk animasi membuka UI */
+.container.fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+/* Kelas untuk animasi menutup UI */
+.container.fade-out {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,15 +41,35 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
+    background-color: linear; /* Latar belakang transparan secara default */
+    transition: background-color 0.3s ease-in-out; /* Animasi perubahan warna */
+}
+
+body.ui-active {
+    background: linear-gradient(rgba(255, 166, 0, 0), rgba(255, 166, 0, 0.5)); /* Warna latar belakang saat UI aktif */
 }
 
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: -5px;
+    color: orange;
+    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
+                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
 }
 
-/* Pastikan container memiliki posisi relative agar teks ESC bisa mengikuti */
+/* Styling untuk sub-judul */
+.sub-title {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px; /* ✅ Kurangi jarak dari judul */
+    margin-bottom: 10px; /* ✅ Kurangi jarak ke daftar pekerjaan */
+    text-align: center;
+    line-height: 1.2; /* ✅ Pastikan keterbacaan tetap baik */
+    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
+                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
+}
+
 .container {
-    position: relative; /* ✅ Agar teks ESC tetap mengikuti UI */
+    position: relative;
     display: none;
     background-color: rgba(0, 0, 0, 0.9);
     padding: 20px;
@@ -23,21 +77,71 @@ h1 {
     text-align: center;
     width: 80%;
     max-width: 800px;
+    opacity: 0; /* Mulai dengan opacity 0 */
+    transform: scale(0.9); /* Mulai dengan skala lebih kecil */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Tambahkan transition */
 }
 
-/* Teks ESC lebih jauh di bawah UI */
+/* Styling untuk container Exit, Escape, dan Search */
 #esc-text {
-    position: absolute; /* ✅ Selalu mengikuti UI */
-    bottom: -50px; /* ✅ Turunkan sedikit lebih jauh */
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    top: 20px; /* Posisi dari atas */
+    right: 20px; /* Posisi dari kanan */
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
     text-align: center;
-    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column; /* Susun elemen secara vertikal */
+    align-items: flex-end; /* Rata kanan */
+    gap: 10px; /* Jarak antara elemen */
+}
+
+/* Container untuk Exit dan Escape */
+.exit-escape-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Styling untuk input pencarian */
+#search-input {
+    font-family: Arial, FontAwesome; /* Gunakan FontAwesome untuk ikon */
+    width: 200px; /* Lebar input pencarian */
+    padding: 5px;
+    padding-left: 18px;
+    border: none;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 12px;
+    outline: none;
+}
+
+#search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 5px;
+}
+
+#search-input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Kata "Exit" hanya memiliki border */
+#esc-text .exit {
+    border: 2px solid rgba(255, 255, 255, 0.1);
     padding: 5px 10px;
-    border-radius: 5px;
-    transition: opacity 0.3s ease-in-out;
+    border-radius: 5px 0px 0px 5px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.3);
+    background: none;
+}
+
+/* Kata "Escape" memiliki background */
+#esc-text .escape {
+    border: 2px rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.3);
+    padding: 5px 10px;
+    border-radius: 0px 5px 5px 0px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* Sembunyikan teks saat UI tertutup */
@@ -52,14 +156,17 @@ h1 {
     gap: 15px;
     padding: 20px;
     justify-content: center;
-    
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     max-height: 400px; /* ✅ Batasi tinggi maksimum */
     overflow-y: auto; /* ✅ Aktifkan scrolling jika pekerjaan terlalu banyak */
+    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
+                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
 }
 
 /* Custom scrollbar agar lebih rapi */
 #job-list::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
 }
 
 #job-list::-webkit-scrollbar-track {
@@ -68,21 +175,22 @@ h1 {
 }
 
 #job-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 10px;
+    background: orange;
+    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
+                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
 }
 
 #job-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgb(182, 118, 0);
 }
 
 /* Card Style */
 .job-card {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 15px;
+    padding: 1px;
     text-align: center;
-    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.711);
     transition: transform 0.2s ease-in-out;
 }
 
@@ -92,25 +200,31 @@ h1 {
 
 /* Gambar Pekerjaan */
 .job-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0px 0px;
     margin-bottom: 10px;
 }
 
 /* Tombol Pilih */
 .job-button {
-    background: #ff4757;
-    color: white;
-    border: none;
+    background: rgba(0, 0, 0, 0.9);
+    color: orange;
+    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
+                 0px 0px 12px rgba(255, 179, 0, 0.5); /* ✅ Outer glow efek */
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
+    border-bottom-color: white;
+    border-left: none;
+    border-top: none;
+    border-right: none;
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
     font-size: 14px;
+    font-weight: bold;
 }
 
 .job-button:hover {
-    background: #ff6b81;
+    background: linear-gradient(rgba(255, 166, 0, 0), rgba(255, 166, 0, 0.5));
 }

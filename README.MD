@@ -157,5 +157,3 @@ Config.Jobs = {
 - **ox_lib by overextended** (https://github.com/overextended/ox_lib)
 - **Inspired by other job scripts**
 ```
-
----

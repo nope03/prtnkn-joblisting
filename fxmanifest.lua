@@ -28,5 +28,6 @@ ui_page 'web/index.html'
 files {
     'web/index.html',
     'web/style.css',
-    'web/script.js'
+    'web/script.js',
+    'locales/*.json'
 }
