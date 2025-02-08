@@ -1,9 +1,17 @@
-let allJobs = []; // Variabel global untuk menyimpan semua pekerjaan
+let allJobs = []; // Menyimpan semua pekerjaan
+let globalCurrentJob = null; // Menyimpan pekerjaan saat ini secara global
 
-// Fungsi untuk menampilkan daftar pekerjaan sebagai card
-function displayJobs(jobs) {
+function displayJobs(jobs, currentJob) {
     const jobList = document.getElementById("job-list");
     jobList.innerHTML = ""; // Kosongkan daftar pekerjaan sebelum menampilkan yang baru
+
+    // Tampilkan pekerjaan saat ini pemain
+    const currentJobLabel = document.getElementById("current-job-label");
+    if (currentJob && currentJob.label) {
+        currentJobLabel.textContent = currentJob.label;
+    } else {
+        currentJobLabel.textContent = "Unemployed";
+    }
 
     jobs.sort((a, b) => a.label.localeCompare(b.label));
 
@@ -24,6 +32,10 @@ function displayJobs(jobs) {
         const jobName = document.createElement("h3");
         jobName.textContent = job.label;
 
+        const jobDescription = document.createElement("p");
+        jobDescription.textContent = job.description || "No description available.";
+        jobDescription.classList.add("job-description");
+
         const button = document.createElement("button");
         button.textContent = "APPLY JOB";
         button.classList.add("job-button");
@@ -37,18 +49,18 @@ function displayJobs(jobs) {
 
         card.appendChild(img);
         card.appendChild(jobName);
+        card.appendChild(jobDescription);
         card.appendChild(button);
 
         jobList.appendChild(card);
     });
 }
 
-// Fungsi untuk memfilter pekerjaan berdasarkan kata kunci
 function filterJobs(keyword) {
     const filteredJobs = allJobs.filter((job) =>
         job.label.toLowerCase().includes(keyword.toLowerCase())
     );
-    displayJobs(filteredJobs); // Tampilkan hasil filter
+    displayJobs(filteredJobs, globalCurrentJob); // Gunakan currentJob dari variabel global
 }
 
 // Fungsi untuk membuka UI
@@ -103,12 +115,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("esc-text").classList.add("hidden");
 });
 
-// Menerima pesan dari Lua
 window.addEventListener("message", function (event) {
     if (event.data.type === "displayJobs") {
         allJobs = event.data.jobs; // Simpan semua pekerjaan
+        globalCurrentJob = event.data.currentJob; // Simpan pekerjaan saat ini ke variabel global
         openUI();
-        displayJobs(allJobs); // Tampilkan semua pekerjaan saat pertama kali dibuka
+        displayJobs(allJobs, globalCurrentJob); // Pastikan currentJob tidak berubah saat UI dibuka
     } else if (event.data.type === "hideUI") {
         closeUI();
     }

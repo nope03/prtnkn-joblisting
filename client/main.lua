@@ -1,6 +1,7 @@
 lib.locale()
 
 local isInZone = false
+local currentJob = nil
 
 function openJobCenter()
     if not isInZone then return end
@@ -13,12 +14,15 @@ function openJobCenter()
 
         lib.playAnim(cache.ped, "amb@code_human_in_bus_passenger_idles@female@tablet@base", "base", 8.0, -8.0, -1, 49, 0, false, false, false)
 
+        currentJob = lib.callback.await('joblisting:getCurrentJob', false)
+
         local jobs = lib.callback.await('joblisting:getJobs', false)
 
         if jobs then
             SendNUIMessage({
                 type = "displayJobs",
-                jobs = jobs
+                jobs = jobs,
+                currentJob = currentJob
             })
             SetNuiFocus(true, true)
         end

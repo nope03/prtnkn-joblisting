@@ -12,6 +12,12 @@
         <h1>Job Center</h1>
         <p class="sub-title">Get a job from the Job Center</p>
         
+        <div id="current-job-container">
+            <span class="radio-box"></span> <!-- Kotak radio -->
+            <span class="current-job-title">Your current job:</span>
+            <span id="current-job-label"></span>
+        </div>        
+
         <!-- Exit, Escape, dan Search -->
         <div id="esc-text" class="hidden">
             <div class="exit-escape-container">
@@ -20,9 +26,10 @@
             </div>
             <input type="text" id="search-input" placeholder="&#xf002; Search jobs..." />
         </div>
-    
+
         <ul id="job-list"></ul>
-    </div>
+    </div>    
+
     <script src="script.js" type="module"></script>
 </body>
 </html>

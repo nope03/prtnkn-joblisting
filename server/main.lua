@@ -2,6 +2,13 @@ lib.locale()
 
 ESX = exports['es_extended']:getSharedObject()
 
+lib.callback.register('joblisting:getCurrentJob', function(source)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return nil end
+
+    return xPlayer.getJob()
+end)
+
 lib.callback.register('joblisting:getJobs', function(source)
     local jobs = {}
 
@@ -9,7 +16,8 @@ lib.callback.register('joblisting:getJobs', function(source)
         table.insert(jobs, {
             name = jobName,
             label = jobData.label,
-            image = jobData.image or Config.DefaultImage
+            image = jobData.image or Config.DefaultImage,
+            description = jobData.description or "No description available." -- Tambahkan deskripsi pekerjaan
         })
     end
 

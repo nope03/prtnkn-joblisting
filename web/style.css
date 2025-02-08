@@ -228,3 +228,42 @@ h1 {
 .job-button:hover {
     background: linear-gradient(rgba(255, 166, 0, 0), rgba(255, 166, 0, 0.5));
 }
+
+.job-description {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 10px 0;
+    text-align: center;
+    line-height: 1.4;
+}
+
+#current-job-container {
+    display: flex;
+    align-items: center; /* Agar sejajar dengan judul */
+    gap: 10px; /* Beri jarak antara kotak radio dan teks */
+    margin-bottom: 10px; /* Tambahkan margin agar lebih rapi */
+}
+
+.radio-box {
+    width: 10px;
+    height: 10px;
+    background-color: orange; /* Warna orange */
+    display: inline-block;
+    box-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
+                 0px 0px 12px rgba(255, 179, 0, 0.5);
+}
+
+.current-job-title {
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
+                 0px 0px 12px rgba(255, 255, 255, 0.5); /* ✅ Outer glow efek */
+}
+
+#current-job-label {
+    font-weight: bold;
+    color: orange;
+    font-size: 12px;
+    text-shadow: 0px 0px 8px rgba(255, 153, 0, 0.8), 
+                 0px 0px 12px rgba(255, 179, 0, 0.5);
+}
